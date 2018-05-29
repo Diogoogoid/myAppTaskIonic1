@@ -29,31 +29,51 @@
     <!-- cordova script (this will be a 404 during development) -->
     <script src="cordova.js"></script>
 
+    <script src="js/TasksModel.js"></script>
     <!-- your app's js -->
     <script src="js/app.js"></script>
   </head>
   <body ng-app="starter">
 
-    <ion-pane>
+    <ion-pane ng-controller="mainController">
       <ion-header-bar class="bar-positive">
         <h1 class="title">GERENCIADOR DE TAREFAS</h1>
       </ion-header-bar>
-      <ion-content ng-controller="mainController">
-        <p>Bem Vindo - {{nomeUsuario}}</p>
-
-      <input type="text" ng-model="mensagem" placeholder="Digite seu nome">
-      <button ng-click="newMessage('i')">ADD</button>
-      <p>
-        {{lista[0]}}
-      </p>
-      <p ng-repeat="item in lista">
-        {{lista}}
-      </p>
-      <ion-list>
-        <ion-item ng-repeat="p in lista" href="#">
-          {{p}}
-        </ion-item>
-      </ion-list>
+      <ion-footer-bar class="bar-calm">
+        <div class="row">
+          <div class="col col-80">
+              <strong>TAREFAS FINALIZADAS</strong>
+          </div>
+          <div class="col col-20">
+              <label class="toggle">
+              <input type="checkbox" ng-model="showMarked">
+              <div class="track">
+                  <div class="handle"></div>
+              </div>
+            </label>
+          </div>
+        </div>
+      </ion-footer-bar>
+      <ion-content>
+        <button class="button button-block button-positive" ng-click="onItemAdd()">ADD</button>
+        <button class="button button-block button-assertive" ng-click="onClickRemove()">
+            <ion-icon name="trash">REMOVER</ion-icon>
+        </button>
+        <ion-list show-delete="removeStatus">
+          <ion-item ng-repeat="item in lista track by $index" ng-hide="onHideItem(item)">
+            <div class="row">
+              <div class="col col-90">
+                  {{item.nome}}
+                  <ion-delete-button class="ion-minus-circled" ng-click="onItemRemove(item)"></ion-delete-button>
+              </div>
+              <div class="col col-10">
+                  <button class="button button-small button-positive button-outline" ng-click="onMarkTask(item)">
+                    <i class="icon ion-checkmark" ng-show="item.finalizada"></i>
+                  </button>
+              </div>
+            </div>
+          </ion-item>
+        </ion-list>
       </ion-content>
     </ion-pane>
   </body>

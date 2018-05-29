@@ -23,15 +23,39 @@ app.run(function($ionicPlatform) {
   });
 });
 
-app.controller('mainController', function($scope){
+app.controller('mainController', function($scope, $ionicPopup){
 
-  $scope.mensagem;
-  $scope.nomeUsuario;
+    var tasks = new getTasks();
 
-  $scope.lista = ["A","2","c","4"];
+    $scope.lista = tasks.items;
+    $scope.showMarked = false;
+    $scope.removeStatus = false;
 
-  $scope.newMessage = function(mensagem){
-      $scope.nomeUsuario = mensagem;
-  };
+    function getItem(){
+      $ionicPopup.show();
+    };
 
+    $scope.onMarkTask = function(item){
+        item.finalizada = !item.finalizada;
+    };
+
+    $scope.onHideItem = function(item){
+      return item.finalizada && !$scope.showMarked;
+    };
+
+    $scope.onItemAdd = function(){
+      var item = {nome: "teste", finalizada: false};
+
+      getItem();
+
+      tasks.add(item);
+    };
+
+    $scope.onItemRemove = function(item){
+      tasks.remove(item);
+    };
+
+    $scope.onClickRemove = function(){
+      $scope.removeStatus = !$scope.removeStatus;
+    };
 });
