@@ -23,7 +23,7 @@ app.run(function($ionicPlatform) {
   });
 });
 
-app.controller('mainController', function($scope, $ionicPopup){
+app.controller('mainController', function($scope, $ionicPopup, $ionicListDelegate){
 
     var tasks = new getTasks();
 
@@ -31,10 +31,10 @@ app.controller('mainController', function($scope, $ionicPopup){
     $scope.showMarked = false;
     $scope.removeStatus = false;
 
-    function getItem(item){
+    function getItem(item, novo){
 
       $scope.data = {};
-      $scope.data.newTask = "";
+      $scope.data.newTask = item.nome;
 
       $ionicPopup.show({
         title: "Nova Tarefa",
@@ -44,16 +44,22 @@ app.controller('mainController', function($scope, $ionicPopup){
           {text:"ADD",
            onTap: function(e){
             item.nome = $scope.data.newTask;
-            tasks.add(item);
+            if(novo){
+                tasks.add(item);
+            }
+            tasks.save();
           }},
           
           {text: "CANCELAR"}
         ]
       });
+
+      $ionicListDelegate.closeOptionButtons();
     };
 
     $scope.onMarkTask = function(item){
         item.finalizada = !item.finalizada;
+        tasks.save();
     };
 
     $scope.onHideItem = function(item){
@@ -61,13 +67,19 @@ app.controller('mainController', function($scope, $ionicPopup){
     };
 
     $scope.onItemAdd = function(){
-      var item = {nome: "teste", finalizada: false};
+      var item = {nome: "", finalizada: false};
 
-      getItem(item);
+      getItem(item,true);
+    };
+
+    $scope.onItemEdit = function(item){
+      getItem(item, false);
+      tasks.save();
     };
 
     $scope.onItemRemove = function(item){
       tasks.remove(item);
+      tasks.save();
     };
 
     $scope.onClickRemove = function(){
