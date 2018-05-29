@@ -31,8 +31,25 @@ app.controller('mainController', function($scope, $ionicPopup){
     $scope.showMarked = false;
     $scope.removeStatus = false;
 
-    function getItem(){
-      $ionicPopup.show();
+    function getItem(item){
+
+      $scope.data = {};
+      $scope.data.newTask = "";
+
+      $ionicPopup.show({
+        title: "Nova Tarefa",
+        scope: $scope,
+        template: "<input type='text' placeholder='Tarefa' autofocus='true' ng-model='data.newTask'>",
+        buttons: [
+          {text:"ADD",
+           onTap: function(e){
+            item.nome = $scope.data.newTask;
+            tasks.add(item);
+          }},
+          
+          {text: "CANCELAR"}
+        ]
+      });
     };
 
     $scope.onMarkTask = function(item){
@@ -46,9 +63,7 @@ app.controller('mainController', function($scope, $ionicPopup){
     $scope.onItemAdd = function(){
       var item = {nome: "teste", finalizada: false};
 
-      getItem();
-
-      tasks.add(item);
+      getItem(item);
     };
 
     $scope.onItemRemove = function(item){
